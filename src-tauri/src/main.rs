@@ -14,6 +14,8 @@ use openai::audio::convert_audio_to_text;
 use openai::chat::get_chat_response;
 use storage::messages::{get_recent_messages, store_messages, reset_messages};
 use crate::audio_capture::audio_capture::AudioCapture;
+
+
 use std::path::Path;
 
 use serde_json::Value;
@@ -33,17 +35,19 @@ fn health_check() -> String {
 
 #[command]
 async fn start_audio_capture() -> Result<String, String> {
+    println!("Iniciando captura de áudio...");
+
     let mut audio_capture = AudioCapture::new();
     audio_capture.start().map_err(|e| e.to_string())?;
+
 
     // Simula a gravação por 5 segundos
     std::thread::sleep(std::time::Duration::from_secs(5));
 
     audio_capture.stop();
-    let file_path = "output.wav";
-    audio_capture.save_to_file(file_path)?;
+    audio_capture.save_to_file("output.mp3").map_err(|e| e.to_string())?;
 
-    Ok(file_path.to_string())
+    Ok("output.mp3".to_string())
 }
 
 #[command]
