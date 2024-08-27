@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { invoke } from "@tauri-apps/api/tauri";
 
 type Props = {
     setMessages: any;
@@ -8,22 +8,19 @@ type Props = {
 function Title({ setMessages }: Props) {
     const [isResetting, setIsResetting] = useState(false);
 
-    // Reset conversation
+   
     const resetConversation = async () => {
         setIsResetting(true);
 
-        await axios
-            .get("http://localhost:8000/reset", {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-            .then((res) => {
-                if (res.status == 200) {
-                    setMessages([]);
-                }
-            })
-            .catch((err) => {});
+        try {
+           
+            const response = await invoke("reset_conversation");
+            if (response) {
+                setMessages([]);
+            }
+        } catch (err) {
+            console.error("Failed to reset conversation:", err);
+        }
 
         setIsResetting(false);
     };

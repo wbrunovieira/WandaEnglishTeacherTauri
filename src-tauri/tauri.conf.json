@@ -19,9 +19,11 @@
     },
     "windows": [
       {
+        "fullscreen": false,
         "title": "wanda-english-teacher",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "resizable": true
       }
     ],
     "security": {
